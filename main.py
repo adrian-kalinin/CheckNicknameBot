@@ -112,7 +112,7 @@ def setup_menu_handlers():
 
     # handle text
     dispatcher.add_handler(MessageHandler(
-        filters=Filters.text & Filters.private,
+        filters=Filters.text & Filters.private & ~filters.adding_filter,
         callback=handlers.handle_username
     ))
 

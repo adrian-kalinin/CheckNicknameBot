@@ -16,7 +16,6 @@ class AddingFilter(BaseFilter):
         with StateBase() as sb:
             response = sb[message.from_user.id]
             if isinstance(response, dict):
-                return 'add_' in response['state']
 
 
 # initialize custom filters

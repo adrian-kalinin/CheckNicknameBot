@@ -224,14 +224,14 @@ def handle_preview(update: Update, context: CallbackContext):
                 chat_id=update.message.chat_id,
                 photo=PhotoSize(*data['photo']),
                 caption=data['text'], parse_mode='HTML',
-                reply_markup=markup
+                reply_markup=markup, disable_web_page_preview=True
             )
 
         elif data['text']:
             context.bot.send_message(
                 chat_id=update.message.chat_id,
                 text=data['text'], parse_mode='HTML',
-                reply_markup=markup
+                reply_markup=markup, disable_web_page_preview=True
             )
 
         else:

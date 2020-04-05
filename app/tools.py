@@ -57,13 +57,14 @@ def send_mailing(bot, data: dict):
                     bot.send_photo(
                         chat_id=user_id, photo=PhotoSize(*data['photo']),
                         caption=data['text'], reply_markup=markup,
-                        parse_mode='HTML'
+                        parse_mode='HTML', disable_web_page_preview=True
                     )
 
                 elif data['text']:
                     bot.send_message(
                         chat_id=user_id, text=data['text'],
-                        reply_markup=markup, parse_mode='HTML'
+                        reply_markup=markup, parse_mode='HTML',
+                        disable_web_page_preview=True
                     )
 
                 successful += 1
