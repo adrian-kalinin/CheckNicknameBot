@@ -367,7 +367,7 @@ def handle_check_my_username(update: Update, context: CallbackContext):
 
 # create Thread for checking username
 def handle_username(update: Update, context: CallbackContext):
-    username = update.message.text.replace('@', '')
+    username = update.message.text.replace('@', '').strip()
     __handle_username(update, context, username)
 
 
@@ -376,7 +376,7 @@ def __handle_username(update: Update, context: CallbackContext, username: str):
     with DataBase() as db:
         if lang := db.get_value(user_id=update.message.from_user.id, item='lang'):
 
-            if re.match('^[A-Za-z0-9_-]*$', username):
+            if re.match('^[A-Za-z0-9_-]*$', username) and username.lower() != 'admin':
                 db.increment(user_id=update.message.from_user.id, item='requests')
 
                 checker = check_username(username)
