@@ -10,7 +10,7 @@ urls = {
     'facebook': 'https://www.facebook.com/{}/',
     'github': 'https://github.com/{}/',
     'telegram': 'https://t.me/{}/',
-    'tiktok': 'https://www.tiktok.com/@{}'
+    'tiktok': 'https://www.tiktok.com/@{}?'
 }
 
 # username statuses
