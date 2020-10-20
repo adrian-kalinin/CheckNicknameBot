@@ -9,10 +9,10 @@ import config
 logging.basicConfig(
     format='%(asctime)s – %(levelname)s – %(message)s',
     datefmt='%m/%d/%Y %I:%M:%S %p',
-    level=logging.INFO
+    level=logging.ERROR
 )
 
-# create updater and dispatcher
+# create updater and dispxatcher
 updater = Updater(token=config.token, use_context=True)
 dispatcher = updater.dispatcher
 

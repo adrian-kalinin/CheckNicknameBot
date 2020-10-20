@@ -37,4 +37,3 @@ class StateBase:
 
     def __delitem__(self, user_id):
         self.coll.delete_many({'user_id': user_id})
-
