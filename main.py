@@ -1,181 +1,72 @@
-from telegram.ext import Updater, Filters, CommandHandler, CallbackQueryHandler, MessageHandler
+from telegram.ext import Updater
+
+from configparser import ConfigParser
 import logging
 
-from app import constants, handlers, filters
-import config
+from bot.models import database, User
+from bot.callbacks import error_callback
+
+from bot.handlers import (
+    start_handler, admin_handler,
+    statistics_handler, backup_handler, mailing_conversation_handler
+)
 
 
-# set_data logging
+# set up logger
 logging.basicConfig(
     format='%(asctime)s – %(levelname)s – %(message)s',
     datefmt='%m/%d/%Y %I:%M:%S %p',
-    level=logging.ERROR
+    level=logging.INFO
 )
 
-# create updater and dispxatcher
-updater = Updater(token=config.token, use_context=True)
+# parse config
+config = ConfigParser()
+config.read('config.ini')
+
+# create updater
+updater = Updater(config.get('bot', 'token'))
 dispatcher = updater.dispatcher
 
 
-def setup_service_handlers():
-    # handle all errors
-    dispatcher.add_error_handler(handlers.handle_error)
+# bound handlers to dispatcher
+def bound_handlers():
+    # noinspection PyTypeChecker
+    dispatcher.add_error_handler(error_callback)
 
-    # handle command /admin and provide admin panel
-    dispatcher.add_handler(CommandHandler(
-        command=constants.admin_command,
-        filters=Filters.user(user_id=config.admins) & Filters.private,
-        callback=handlers.handle_admin
-    ))
+    # command handlers
+    dispatcher.add_handler(admin_handler)
+    dispatcher.add_handler(start_handler)
 
-    # reboot the bot
-    dispatcher.add_handler(CallbackQueryHandler(
-        pattern=constants.reboot_callback,
-        callback=handlers.handle_reboot
-    ))
+    # admin handlers
+    dispatcher.add_handler(statistics_handler)
+    dispatcher.add_handler(backup_handler)
 
-    # send mailing form
-    dispatcher.add_handler(CallbackQueryHandler(
-        pattern=constants.mailing_callback,
-        callback=handlers.handle_mailing
-    ))
-
-    # send statistics about the bot
-    dispatcher.add_handler(CallbackQueryHandler(
-        pattern=constants.statistics_callback,
-        callback=handlers.handle_statistics
-    ))
+    # mailing handlers
+    dispatcher.add_handler(mailing_conversation_handler)
 
 
-def setup_mailing_handlers():
-    # cancel adding content to mailing message
-    dispatcher.add_handler(MessageHandler(
-        filters=(Filters.regex(constants.cancel_adding_button) & filters.adding_filter
-                 & Filters.user(user_id=config.admins) & Filters.private),
-        callback=handlers.handle_cancel_adding
-    ))
-
-    # cancel mailing and delete the data
-    dispatcher.add_handler(MessageHandler(
-        filters=(Filters.regex(constants.cancel_mailing_button) & filters.mailing_filter
-                 & Filters.user(user_id=config.admins) & Filters.private),
-        callback=handlers.handle_cancel_mailing
-    ))
-
-    # send mailing message to everyone
-    dispatcher.add_handler(MessageHandler(
-        filters=(Filters.regex(constants.send_mailing_button) & filters.mailing_filter
-                 & Filters.user(user_id=config.admins) & Filters.private),
-        callback=handlers.handle_send_mailing
-    ))
-
-    # send preview of the mailing message
-    dispatcher.add_handler(MessageHandler(
-        filters=(Filters.regex(constants.preview_button) & filters.mailing_filter
-                 & Filters.user(user_id=config.admins) & Filters.private),
-        callback=handlers.handle_preview
-    ))
-
-    # set_data state before adding to the mailing message
-    dispatcher.add_handler(MessageHandler(
-        filters=(Filters.regex(constants.add_content_button) & filters.mailing_filter
-                 & Filters.user(user_id=config.admins) & Filters.private),
-        callback=handlers.handle_change_content
-    ))
-
-    # add content to the mailing message
-    dispatcher.add_handler(MessageHandler(
-        filters=((Filters.text | Filters.photo) & filters.adding_filter
-                 & Filters.user(user_id=config.admins) & Filters.private),
-        callback=handlers.handle_mailing_content
-    ))
+# set up database
+def configure_database():
+    database.connect()
+    database.create_tables([User])
+    database.close()
+    logging.info('Database has been configured')
 
 
-def setup_menu_handlers():
-    # handle lang button
-    dispatcher.add_handler(MessageHandler(
-        filters=Filters.regex(constants.lang_button) & Filters.private,
-        callback=handlers.handle_change_lang
-    ))
-
-    # handle help button
-    dispatcher.add_handler(MessageHandler(
-        filters=Filters.regex(constants.help_button) & Filters.private,
-        callback=handlers.handle_help
-    ))
-
-    # handle check my username button
-    dispatcher.add_handler(MessageHandler(
-        filters=Filters.regex(constants.check_my_username_button) & Filters.private,
-        callback=handlers.handle_check_my_username
-    ))
-
-    # handle text
-    dispatcher.add_handler(MessageHandler(
-        filters=Filters.text & Filters.private & ~filters.adding_filter,
-        callback=handlers.handle_username
-    ))
-
-
-def setup_inline_handlers():
-    # handle inline language button
-    dispatcher.add_handler(CallbackQueryHandler(
-        pattern=constants.lang_inline_button,
-        callback=handlers.handle_inline_lang
-    ))
-
-
-def setup_commands_handlers():
-    # handle command /start
-    dispatcher.add_handler(CommandHandler(
-        filters=Filters.private,
-        command=constants.start_command,
-        callback=handlers.handle_start
-    ))
-
-    # handle command /help
-    dispatcher.add_handler(CommandHandler(
-        filters=Filters.private,
-        command=constants.help_command,
-        callback=handlers.handle_help
-    ))
-
-    # handle command /about
-    dispatcher.add_handler(CommandHandler(
-        filters=Filters.private,
-        command=constants.about_command,
-        callback=handlers.handle_about
-    ))
-
-    # handle command /lang
-    dispatcher.add_handler(CommandHandler(
-        filters=Filters.private,
-        command=constants.lang_command,
-        callback=handlers.handle_change_lang
-    ))
+# set up webhook
+def configure_webhook():
+    pass
 
 
 def main():
-    # setup all handlers
-    setup_service_handlers()
-    setup_mailing_handlers()
-    setup_commands_handlers()
-    setup_inline_handlers()
-    setup_menu_handlers()
+    # setting up application
+    bound_handlers()
+    configure_database()
+    configure_webhook()
 
-    # setup webhook
-    updater.start_webhook(
-        listen=config.listen,
-        port=config.port,
-        url_path=config.token,
-        key=config.key_path,
-        cert=config.cert_path,
-        webhook_url=config.webhook_url
-    )
-
-    # log the start
-    logging.info('Bot has been started.')
-    updater.idle()
+    # start bot
+    updater.start_polling()
+    logging.info('Bot has started')
 
 
 if __name__ == '__main__':

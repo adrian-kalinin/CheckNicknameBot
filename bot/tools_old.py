@@ -2,9 +2,9 @@ from telegram import Update, InlineKeyboardMarkup, InlineKeyboardButton, PhotoSi
 from telegram.ext import CallbackContext
 from telegram.error import TelegramError, NetworkError
 
-from .constants import username_statuses
+from bot.utils.constants_old import username_statuses
 from .database import DataBase
-from .checkers import checkers
+from bot.utils.checkers_old import checkers
 
 from functools import wraps
 import validators

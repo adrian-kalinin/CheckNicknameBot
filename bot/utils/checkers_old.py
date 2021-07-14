@@ -1,4 +1,4 @@
-from .constants import urls
+from bot.utils.constants_old import urls
 import requests
 
 
