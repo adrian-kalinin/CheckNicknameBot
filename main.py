@@ -8,7 +8,9 @@ from bot.callbacks import error_callback
 
 from bot.handlers import (
     start_handler, admin_handler,
-    statistics_handler, mailing_conversation_handler
+    statistics_handler, mailing_conversation_handler,
+    check_my_username_handler, how_to_use_handler,
+    check_username_handler
 )
 
 
@@ -40,6 +42,10 @@ def bound_handlers():
     # mailing handlers
     dispatcher.add_handler(mailing_conversation_handler)
 
+    # core handlers
+    dispatcher.add_handler(check_my_username_handler)
+    dispatcher.add_handler(how_to_use_handler)
+    dispatcher.add_handler(check_username_handler)
 
 # set up database
 def configure_database():

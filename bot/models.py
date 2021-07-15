@@ -31,4 +31,5 @@ class BaseModel(Model):
 # model that represents user
 class User(BaseModel):
     user_id = IntegerField(primary_key=True, unique=True)
+    requests = IntegerField(default=0)
     active = BooleanField(default=True)

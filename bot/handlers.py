@@ -33,5 +33,25 @@ mailing_conversation_handler = ConversationHandler(
             MessageHandler(filters=Filters.text(ReplyButtons.send_mailing), callback=send_mailing_callback)
         ]
     },
-    fallbacks=[]
+    fallbacks=[],
+    run_async=True
+
+)
+
+# core handlers
+check_my_username_handler = MessageHandler(
+    filters=Filters.text(ReplyButtons.check_my_username),
+    callback=check_my_username_callback,
+    run_async=True
+)
+
+how_to_use_handler = MessageHandler(
+    filters=Filters.text(ReplyButtons.how_to_use),
+    callback=how_to_use_callback
+)
+
+check_username_handler = MessageHandler(
+    filters=Filters.text,
+    callback=check_username_callback,
+    run_async=True
 )
