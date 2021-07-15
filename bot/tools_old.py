@@ -4,7 +4,7 @@ from telegram.error import TelegramError, NetworkError
 
 from bot.utils.constants_old import username_statuses
 from .database import DataBase
-from bot.utils.checkers_old import checkers
+from bot.utils.checkers import checkers
 
 from functools import wraps
 import validators

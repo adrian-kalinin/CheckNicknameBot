@@ -1,5 +1,6 @@
-from bot.utils.constants_old import urls
 import requests
+
+from ..constants import URLS
 
 
 def _check_request(link: str):
@@ -10,32 +11,32 @@ def _check_request(link: str):
 
 
 def _check_instagram(username: str):
-    link = urls['instagram'].format(username)
+    link = URLS['instagram'].format(username)
     return _check_request(link)
 
 
 def _check_twitter(username: str):
-    link = urls['twitter'].format(username)
+    link = URLS['twitter'].format(username)
     return _check_request(link)
 
 
 def _check_vk(username: str):
-    link = urls['vk'].format(username)
+    link = URLS['vk'].format(username)
     return _check_request(link)
 
 
 def _check_facebook(username: str):
-    link = urls['facebook'].format(username)
+    link = URLS['facebook'].format(username)
     return _check_request(link)
 
 
 def _check_github(username: str):
-    link = urls['github'].format(username)
+    link = URLS['github'].format(username)
     return _check_request(link)
 
 
 def _check_tiktok(username):
-    link = urls['tiktok'].format(username)
+    link = URLS['tiktok'].format(username)
     headers = {'user-agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:74.0) Gecko/20100101 Firefox/74.0'}
     if 'video-feed' in requests.get(link, headers=headers).text:
         return link
@@ -43,7 +44,7 @@ def _check_tiktok(username):
 
 
 def _check_telegram(username):
-    link = urls['telegram'].format(username)
+    link = URLS['telegram'].format(username)
     if 'tgme_page_title' in requests.get(link).text:
         return link
     return False

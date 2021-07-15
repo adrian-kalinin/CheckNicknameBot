@@ -1,1 +1,1 @@
-# This package is for code not related to the bot directly
+from .checkers import checkers
