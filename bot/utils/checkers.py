@@ -16,7 +16,7 @@ def _check_instagram(username: str):
 
 
 def _check_twitter(username: str):
-    link = URLS['twitter'].format(username)
+    link = URLS['twitter'].format(username)  # TODO fix checker
     return _check_request(link)
 
 

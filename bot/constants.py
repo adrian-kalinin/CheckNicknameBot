@@ -86,7 +86,7 @@ class Message:
     )
 
     how_to_use = (
-        "💬 Just send me any username and I will check if the it's available on social medias. "
+        "Just send me any username and I will check if the it's available on social medias. "
         'Remember that usernames can contain only letters, numbers and underscores.\n\n'
     )
 
