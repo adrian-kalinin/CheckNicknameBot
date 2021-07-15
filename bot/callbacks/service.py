@@ -1,4 +1,4 @@
-from telegram import Update, TelegramError
+from telegram import Update, TelegramError, ParseMode
 from telegram.ext import CallbackContext
 import logging
 
@@ -17,7 +17,8 @@ def error_callback(update: Update, context: CallbackContext):
 
         context.bot.send_message(
             chat_id=DEVELOPER,
-            text=Message.unexpected_error.format(error=context.error, update=update)
+            text=Message.unexpected_error.format(error=context.error, update=update),
+            parse_mode=ParseMode.HTML
         )
 
     except Exception as ex:
