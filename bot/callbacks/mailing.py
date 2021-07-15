@@ -1,5 +1,9 @@
-from telegram import Update, Message as TelegramMessage, TelegramError, Bot, PhotoSize, Animation, Video, ParseMode
 from telegram.ext import CallbackContext, ConversationHandler
+from telegram import (
+    Update, Message as TelegramMessage,
+    TelegramError, Bot, PhotoSize,
+    Animation, Video, ParseMode
+)
 
 from threading import Thread
 import logging

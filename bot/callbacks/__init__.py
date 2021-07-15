@@ -5,7 +5,7 @@ from .commands import (
 )
 
 from .admin import (
-    statistics_callback, mailing_callback, backup_callback
+    statistics_callback, mailing_callback
 )
 
 from .mailing import (

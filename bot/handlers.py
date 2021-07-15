@@ -1,22 +1,15 @@
 from telegram.ext import CommandHandler, MessageHandler, CallbackQueryHandler, ConversationHandler, Filters
-from configparser import ConfigParser
+
+from settings import ADMINS
 
 from .constants import CallbackData, States, ReplyButtons
 from .callbacks import *
 
 
-# parse config
-config = ConfigParser()
-config.read('config.ini')
-
-# parser admin list
-admins = tuple(map(int, config.get('bot', 'admins').split(',')))
-
-
 # command handlers
 admin_handler = CommandHandler(
     command='admin', callback=admin_command_callback,
-    filters=Filters.user(user_id=admins)
+    filters=Filters.user(user_id=ADMINS)
 )
 
 start_handler = CommandHandler(
@@ -27,11 +20,6 @@ start_handler = CommandHandler(
 statistics_handler = CallbackQueryHandler(
     pattern=CallbackData.statistics,
     callback=statistics_callback
-)
-
-backup_handler = CallbackQueryHandler(
-    pattern=CallbackData.backup,
-    callback=backup_callback
 )
 
 # mailing handlers

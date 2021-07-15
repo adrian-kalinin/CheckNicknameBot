@@ -1,3 +1,4 @@
 python-telegram-bot==13.3
 peewee==3.14.1
 requests==2.26.0
+python-environ==0.4.54

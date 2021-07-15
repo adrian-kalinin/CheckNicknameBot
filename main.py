@@ -1,14 +1,14 @@
 from telegram.ext import Updater
-
-from configparser import ConfigParser
 import logging
+
+from settings import BOT_TOKEN
 
 from bot.models import database, User
 from bot.callbacks import error_callback
 
 from bot.handlers import (
     start_handler, admin_handler,
-    statistics_handler, backup_handler, mailing_conversation_handler
+    statistics_handler, mailing_conversation_handler
 )
 
 
@@ -19,12 +19,9 @@ logging.basicConfig(
     level=logging.INFO
 )
 
-# parse config
-config = ConfigParser()
-config.read('config.ini')
 
 # create updater
-updater = Updater(config.get('bot', 'token'))
+updater = Updater(BOT_TOKEN)
 dispatcher = updater.dispatcher
 
 
@@ -39,7 +36,6 @@ def bound_handlers():
 
     # admin handlers
     dispatcher.add_handler(statistics_handler)
-    dispatcher.add_handler(backup_handler)
 
     # mailing handlers
     dispatcher.add_handler(mailing_conversation_handler)
