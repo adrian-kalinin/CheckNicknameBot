@@ -51,7 +51,7 @@ def _check_tiktok(username):
 
 def _check_telegram(username):
     link = URLS['telegram'].format(username)
-    if 'tgme_page_title' in requests.get(link).text:
+    if 'tgme_page_title' in requests.get(link, headers=HEADERS).text:
         return link
     return False
 
