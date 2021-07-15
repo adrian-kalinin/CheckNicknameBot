@@ -3,6 +3,13 @@ import requests
 from ..constants import URLS
 
 
+HEADERS = {'user-agent': (
+    'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) '
+    'AppleWebKit/605.1.15 (KHTML, like Gecko) '
+    'Version/14.1.1 Safari/605.1.15')
+}
+
+
 def _check_request(link: str):
     response = requests.get(link)
     if response.status_code == 200:
@@ -11,12 +18,12 @@ def _check_request(link: str):
 
 
 def _check_instagram(username: str):
-    link = URLS['instagram'].format(username)
+    link = URLS['instagram'].format(username)  # TODO
     return _check_request(link)
 
 
 def _check_twitter(username: str):
-    link = URLS['twitter'].format(username)  # TODO fix checker
+    link = URLS['twitter'].format(username)  # TODO
     return _check_request(link)
 
 
@@ -37,8 +44,7 @@ def _check_github(username: str):
 
 def _check_tiktok(username):
     link = URLS['tiktok'].format(username)
-    headers = {'user-agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:74.0) Gecko/20100101 Firefox/74.0'}
-    if 'video-feed' in requests.get(link, headers=headers).text:
+    if 'video-feed' in requests.get(link, headers=HEADERS).text:
         return link
     return False
 
