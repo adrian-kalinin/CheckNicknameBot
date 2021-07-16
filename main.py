@@ -47,6 +47,7 @@ def bound_handlers():
     dispatcher.add_handler(how_to_use_handler)
     dispatcher.add_handler(check_username_handler)
 
+
 # set up database
 def configure_database():
     database.connect()
